@@ -1,7 +1,9 @@
 import {
     createContextId,
+    Signal,
     useContext,
-    useContextProvider
+    useContextProvider,
+    useSignal
 } from "@builder.io/qwik";
 
 export const sharedContext = <T>(name: string) =>
@@ -28,4 +30,21 @@ export const useShared = <T extends object>(
     const _shared = hook();
     createShared(name, _shared);
     return _shared;
+};
+
+export const useSharedSignal = <T>(
+    name: string,
+    value: T    
+) => {
+
+    // get context if exists
+    const shared = getShared<Signal<T>>(name);
+    if (shared) {
+        return shared;
+    }
+
+    // return new shared context
+    const signal = useSignal(value);
+    createShared(name, signal);
+    return signal;
 };

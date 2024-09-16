@@ -1,7 +1,9 @@
 import { getApp, getApps, initializeApp } from 'firebase/app';
 import { getAuth, signInWithPopup as _signInWithPopup } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { useShared } from './use-shared';
+import { useShared, useSharedSignal } from './use-shared';
+import { isBrowser } from '@builder.io/qwik/build';
+import { useSignal } from '@builder.io/qwik';
 
 // import your .env variable
 // PUBLIC_FIREBASE_CONFIG={YOUR FIREBASE CONFIG}
@@ -12,7 +14,17 @@ const firebase_config = JSON.parse(
 
 // initialize firebase
 
-const _useFirebase = () => {
+export const useFirebase = () => {
+
+    useSignal({
+        app: null,
+        auth: null,
+        db: null
+    })
+
+    const loaded = useFirebaseLoaded();
+
+
 
     const app = getApps().length
         ? getApp()
@@ -28,4 +40,4 @@ const _useFirebase = () => {
     };
 };
 
-export const useFirebase = () => useShared('firebase', _useFirebase);
+export const useFirebaseLoaded = () => useSharedSignal('firebase', false);
