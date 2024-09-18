@@ -1,4 +1,5 @@
-import { useStore, $, useVisibleTask$, noSerialize } from '@builder.io/qwik';
+import { useStore, useVisibleTask$ } from '@builder.io/qwik';
+import { isBrowser } from '@builder.io/qwik/build';
 import {
     GoogleAuthProvider,
     onIdTokenChanged,
@@ -6,7 +7,7 @@ import {
     signOut,
     type User
 } from 'firebase/auth';
-import { useFirebase } from './use-firebase';
+import { auth } from './firebase';
 import { useShared } from './use-shared';
 
 export interface userData {
@@ -16,32 +17,17 @@ export interface userData {
     email: string | null;
 };
 
-export const useAuth = () => {
+export const loginWithGoogle = () => {
+    if (isBrowser) {
+        signInWithPopup(auth, new GoogleAuthProvider());
+    }    
+};
 
-    const { auth } = useFirebase();
-
-    return {
-        login: $(async () => {
-            if (!auth) {
-                return;
-            }
-            await signInWithPopup(
-                auth,
-                new GoogleAuthProvider()
-            );
-        }),
-        logout: $(async () => {
-            if (!auth) {
-                return;
-            }
-            await signOut(auth);
-        })
-    };
+export const logout = () => {
+    signOut(auth);
 };
 
 export function _useUser() {
-
-    const fb = useFirebase();
 
     const _store = useStore<{
         loading: boolean,
@@ -57,14 +43,14 @@ export function _useUser() {
         _store.loading = true;
 
         // server environment
-        if (!fb.auth) {
+        if (!auth) {
             _store.loading = false;
             _store.data = null;
             return;
         }
 
         // subscribe to user changes
-        return onIdTokenChanged(fb.auth, (_user: User | null) => {
+        return onIdTokenChanged(auth, (_user: User | null) => {
 
             _store.loading = false;
 
