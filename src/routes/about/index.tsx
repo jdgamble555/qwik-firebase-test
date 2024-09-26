@@ -2,7 +2,7 @@ import type { RequestHandler } from "@builder.io/qwik-city";
 import { doc, getDoc } from "firebase/firestore/lite";
 import { firebaseServer } from "~/lib/firebase-lite";
 
-export const onPost: RequestHandler = async ({ request, json }) => {
+export const onPost: RequestHandler = async ({ request, json, text }) => {
 
     // login with token
     const { serverAuth, serverDB } = await firebaseServer(request);
@@ -24,7 +24,7 @@ export const onPost: RequestHandler = async ({ request, json }) => {
         });
         return;
     }
-    json(401, 'Invalid Token');
+    text(401, 'Invalid Token');
 
 };
 
