@@ -17,7 +17,7 @@ export const onPost: RequestHandler = async ({ request, json }) => {
         throw 'Document does not exist!';
     }
 
-    if (!serverAuth.currentUser) {
+    if (serverAuth.currentUser) {
 
         json(200, {
             data: aboutSnap.data() as AboutDoc
