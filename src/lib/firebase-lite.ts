@@ -13,16 +13,12 @@ export const firebaseServer = async (request: Request) => {
 
     const authIdToken = request.headers.get('Authorization')?.split('Bearer ')[1];
 
-    console.log(authIdToken);
-
     const serverApp = initializeServerApp(firebase_config, {
         authIdToken
     });
 
     const serverAuth = getAuth(serverApp);
     await serverAuth.authStateReady();
-
-    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     const serverDB = getFirestore(serverApp);
 

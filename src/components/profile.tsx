@@ -1,6 +1,7 @@
 import { component$ } from '@builder.io/qwik';
 import { useUser } from '~/lib/use-user';
 import { Logout } from './helpers';
+import About from './about';
 
 export default component$(() => {
 
@@ -18,6 +19,7 @@ export default component$(() => {
             <img src={photoURL || ''} width="100" height="100" alt="user avatar" />
             <p>Your userID is {uid}</p>
             <Logout />
+            <About />
         </div>
     );
 });
