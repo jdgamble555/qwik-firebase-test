@@ -27,7 +27,7 @@ export const logout = () => {
     signOut(auth);
 };
 
-export function useUser() {
+export function _useUser() {
 
     const _store = useStore<{
         loading: boolean,
@@ -76,3 +76,5 @@ export function useUser() {
 
     return _store;
 };
+
+export const useUser = () => useShared('user', _useUser);
