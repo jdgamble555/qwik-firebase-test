@@ -1,11 +1,14 @@
 import { $, component$, useStore } from "@builder.io/qwik";
-import { auth } from "~/lib/firebase";
+import { getAuth } from "firebase/auth";
+import { app } from "~/lib/firebase";
 
 export default component$(() => {
 
     const state = useStore<{ data: AboutDoc | null }>({ data: null });
 
     const fetchData = $(async () => {
+
+        const auth = getAuth(app);
 
         if (!auth.currentUser) {
             throw 'Not Logged in!';

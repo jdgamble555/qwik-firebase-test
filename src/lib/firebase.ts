@@ -1,6 +1,5 @@
-import { isBrowser } from '@builder.io/qwik/build';
 import { getApp, getApps, initializeApp } from 'firebase/app';
-import { getAuth, signInWithPopup as _signInWithPopup, type Auth } from 'firebase/auth';
+import { signInWithPopup as _signInWithPopup } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 // import your .env variable
@@ -16,4 +15,4 @@ export const app = getApps().length
     : initializeApp(firebase_config);
 
 export const db = getFirestore(app);
-export const auth = (isBrowser ? getAuth(app) : null) as Auth;
+//export const auth = (isBrowser ?  : null) as Auth;

@@ -1,14 +1,15 @@
 import { useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { isBrowser } from '@builder.io/qwik/build';
 import {
+    getAuth,
     GoogleAuthProvider,
     onIdTokenChanged,
     signInWithPopup,
     signOut,
     type User
 } from 'firebase/auth';
-import { auth } from './firebase';
 import { useShared } from './use-shared';
+import { app } from './firebase';
 
 export interface userData {
     photoURL: string | null;
@@ -19,12 +20,16 @@ export interface userData {
 
 export const loginWithGoogle = () => {
     if (isBrowser) {
+        const auth = getAuth(app);
         signInWithPopup(auth, new GoogleAuthProvider());
     }    
 };
 
 export const logout = () => {
-    signOut(auth);
+    if (isBrowser) {
+        const auth = getAuth(app);
+       signOut(auth); 
+    }
 };
 
 export function _useUser() {
@@ -41,6 +46,8 @@ export function _useUser() {
 
         // toggle loading
         _store.loading = true;
+
+        const auth = getAuth(app);
 
         // server environment
         if (!auth) {
