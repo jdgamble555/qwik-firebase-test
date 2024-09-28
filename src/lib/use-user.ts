@@ -1,13 +1,7 @@
 import { useStore, useVisibleTask$ } from '@builder.io/qwik';
-import {
-    GoogleAuthProvider,
-    onIdTokenChanged,
-    signInWithPopup,
-    signOut,
-    type User
-} from 'firebase/auth';
+import type { User } from 'firebase/auth';
 import { useShared } from './use-shared';
-import { getFirebase } from './use-firebase';
+import { getUser, login } from './use-firebase';
 import { isBrowser } from '@builder.io/qwik/build';
 
 
@@ -20,21 +14,13 @@ export interface userData {
 
 export const loginWithGoogle = async () => {
     if (isBrowser) {
-        const { auth } = await getFirebase();
-        if (!auth) {
-            return;
-        }
-        await signInWithPopup(auth, new GoogleAuthProvider());
+        await login();
     }
 };
 
 export const logout = async () => {
     if (isBrowser) {
-        const { auth } = await getFirebase();
-        if (!auth) {
-            return;
-        }
-        await signOut(auth);
+        await logout();
     }
 };
 
@@ -50,7 +36,7 @@ export function _useUser() {
 
     useVisibleTask$(() => {
 
-        getFirebase().then(({ auth }) => {
+        getUser().then(({ auth, onAuthChange }) => {
 
             // toggle loading
             _store.loading = true;
@@ -67,7 +53,7 @@ export function _useUser() {
             }
 
             // subscribe to user changes
-            return onIdTokenChanged(auth, (_user: User | null) => {
+            return onAuthChange(auth, (_user: User | null) => {
 
                 _store.loading = false;
 

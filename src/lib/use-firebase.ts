@@ -1,5 +1,3 @@
-import { isBrowser } from '@builder.io/qwik/build';
-
 // import your .env variable
 // PUBLIC_FIREBASE_CONFIG={YOUR FIREBASE CONFIG}
 // make sure the Firebase keys are in Quotes ""
@@ -8,8 +6,8 @@ const firebase_config = JSON.parse(
 );
 
 
-const importFirebase = async () => {
-
+// dynamic importing
+const importFirebaseApp = async () => {
     const firebaseApp = await import('firebase/app');
 
     if (firebaseApp.getApps()?.length) {
@@ -17,31 +15,50 @@ const importFirebase = async () => {
     }
     return firebaseApp.initializeApp(firebase_config);
 };
+const importFirebaseAuth = async () => await import('firebase/auth');
+const importFirestore = async () => await import('firebase/firestore');
 
 
 export const getFirebase = async () => {
 
-    if (isBrowser) {
+    const app = await importFirebaseApp();
+    const firestore = await importFirestore();
+    const firebaseAuth = await importFirebaseAuth();
 
-        const app = await importFirebase();
-        const firestore =  await import('firebase/firestore');
-        const firebaseAuth = await import('firebase/auth');
-
-        const db = firestore.getFirestore(app);
-        const auth = firebaseAuth.getAuth(app);
-
-        return {
-            app,
-            db,
-            auth
-        };
-    }
+    const db = firestore.getFirestore(app);
+    const auth = firebaseAuth.getAuth(app);
 
     return {
-        app: null,
-        db: null,
-        auth: null
+        app,
+        db,
+        auth
     };
 };
 
+
+export const logout = async () => {
+    const firebaseAuth = await importFirebaseAuth();
+    const { auth } = await getFirebase();
+    await firebaseAuth.signOut(auth);
+};
+
+
+export const login = async () => {
+    const firebaseAuth = await importFirebaseAuth();
+    const { auth } = await getFirebase();
+    await firebaseAuth.signInWithPopup(
+        auth,
+        new firebaseAuth.GoogleAuthProvider()
+    );
+};
+
+export const getUser = async () => {
+    const firebaseAuth = await importFirebaseAuth();
+    const { auth } = await getFirebase();
+
+    return {
+        auth,
+        onAuthChange: firebaseAuth.onIdTokenChanged
+    };
+};
 
