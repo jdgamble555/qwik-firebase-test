@@ -29,8 +29,6 @@ export const loginWithGoogle = async () => {
 };
 
 export const logout = async () => {
-
-
     if (isBrowser) {
         const { auth } = getFirebase();
         if (!auth) {
@@ -40,7 +38,7 @@ export const logout = async () => {
     }
 };
 
-export function _useUser() {
+export function useUser() {
 
     const _store = useStore<{
         loading: boolean,
@@ -56,6 +54,10 @@ export function _useUser() {
 
         // toggle loading
         _store.loading = true;
+
+        if (!isBrowser) {
+            return;
+        }
 
         // server environment
         if (!auth) {
@@ -92,4 +94,4 @@ export function _useUser() {
     return _store;
 };
 
-export const useUser = () => useShared('user', _useUser);
+//export const useUser = () => useShared('user', _useUser);
