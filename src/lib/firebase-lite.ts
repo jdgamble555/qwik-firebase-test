@@ -1,4 +1,4 @@
-import { initializeServerApp } from "firebase/app";
+import { deleteApp, getApp, getApps, initializeServerApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore/lite";
 
@@ -12,6 +12,11 @@ const firebase_config = JSON.parse(
 export const firebaseServer = async (request: Request) => {
 
     const authIdToken = request.headers.get('Authorization')?.split('Bearer ')[1];
+
+    if (getApps()?.length) {
+        const app = getApp();
+        await deleteApp(app);
+    }
 
     const serverApp = initializeServerApp(firebase_config, {
         authIdToken

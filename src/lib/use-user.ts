@@ -38,7 +38,7 @@ export const logout = async () => {
     }
 };
 
-export function useUser() {
+export function _useUser() {
 
     const _store = useStore<{
         loading: boolean,
@@ -94,4 +94,4 @@ export function useUser() {
     return _store;
 };
 
-//export const useUser = () => useShared('user', _useUser);
+export const useUser = () => useShared('user', _useUser);
