@@ -25,7 +25,7 @@ export const loginWithGoogle = async () => {
     }
     if (isBrowser) {
         await signInWithPopup(auth, new GoogleAuthProvider());
-    }    
+    }
 };
 
 export const logout = async () => {
@@ -33,7 +33,9 @@ export const logout = async () => {
     if (!auth) {
         return;
     }
-    await signOut(auth);
+    if (isBrowser) {
+        await signOut(auth);
+    }
 };
 
 export function _useUser() {
