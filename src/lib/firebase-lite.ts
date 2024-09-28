@@ -14,6 +14,7 @@ export const firebaseServer = async (request: Request) => {
     const authIdToken = request.headers.get('Authorization')?.split('Bearer ')[1];
 
     if (getApps()?.length) {
+        console.log('app exists!');
         const app = getApp();
         await deleteApp(app);
     }
