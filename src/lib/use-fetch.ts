@@ -1,9 +1,14 @@
+import { isServer } from "@builder.io/qwik/build";
 import { getFirebase } from "./use-firebase";
 
 
 export const getAbout = async () => {
 
     const { auth } = getFirebase();
+
+    if (isServer) {
+        return null;
+    }
 
     if (!auth?.currentUser) {
         throw 'Not Logged in!';

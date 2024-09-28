@@ -8,6 +8,7 @@ import {
 } from 'firebase/auth';
 import { useShared } from './use-shared';
 import { getFirebase } from './use-firebase';
+import { isBrowser } from '@builder.io/qwik/build';
 
 
 export interface userData {
@@ -22,7 +23,9 @@ export const loginWithGoogle = async () => {
     if (!auth) {
         return;
     }
-    await signInWithPopup(auth, new GoogleAuthProvider());
+    if (isBrowser) {
+        await signInWithPopup(auth, new GoogleAuthProvider());
+    }    
 };
 
 export const logout = async () => {
