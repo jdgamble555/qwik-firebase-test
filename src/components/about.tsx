@@ -1,4 +1,5 @@
 import { $, component$, useSignal } from "@builder.io/qwik";
+import { isBrowser } from "@builder.io/qwik/build";
 import { getAbout } from "~/lib/use-fetch";
 
 
@@ -7,7 +8,9 @@ export default component$(() => {
     const about = useSignal<AboutDoc | null>(null);
 
     const fetchAbout = $(async () => {
-        about.value = await getAbout();
+        if (isBrowser) {
+            about.value = await getAbout();
+        }
     });
 
     return (
