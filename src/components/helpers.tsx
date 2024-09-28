@@ -6,8 +6,6 @@ export const Loading = () => {
 };
 
 export const Login = component$(() => {
-
-
     return <button type="button" class="border p-2 rounded-md text-white bg-red-600" onClick$={() => loginWithGoogle()}>
         Signin with Google
     </button>

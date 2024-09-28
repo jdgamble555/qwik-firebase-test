@@ -8,7 +8,7 @@ import {
 } from 'firebase/auth';
 import { useShared } from './use-shared';
 import { getFirebase } from './use-firebase';
-import { isBrowser } from '@builder.io/qwik/build';
+
 
 export interface userData {
     photoURL: string | null;
@@ -17,16 +17,19 @@ export interface userData {
     email: string | null;
 };
 
-
 export const loginWithGoogle = async () => {
     const { auth } = getFirebase();
-    if (isBrowser) {
-        await signInWithPopup(auth, new GoogleAuthProvider());
-    }    
+    if (!auth) {
+        return;
+    }
+    await signInWithPopup(auth, new GoogleAuthProvider());
 };
 
 export const logout = async () => {
     const { auth } = getFirebase();
+    if (!auth) {
+        return;
+    }
     await signOut(auth);
 };
 
