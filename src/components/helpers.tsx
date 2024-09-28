@@ -12,8 +12,6 @@ export const Login = component$(() => {
 });
 
 export const Logout = component$(() => {
-
-
     return <p>
         <button type="button" class="border p-2 rounded-md text-white bg-lime-600" onClick$={() => logout()}>
             Logout

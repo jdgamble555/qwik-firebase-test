@@ -19,21 +19,23 @@ export interface userData {
 };
 
 export const loginWithGoogle = async () => {
-    const { auth } = getFirebase();
-    if (!auth) {
-        return;
-    }
     if (isBrowser) {
+        const { auth } = getFirebase();
+        if (!auth) {
+            return;
+        }
         await signInWithPopup(auth, new GoogleAuthProvider());
     }
 };
 
 export const logout = async () => {
-    const { auth } = getFirebase();
-    if (!auth) {
-        return;
-    }
+
+
     if (isBrowser) {
+        const { auth } = getFirebase();
+        if (!auth) {
+            return;
+        }
         await signOut(auth);
     }
 };

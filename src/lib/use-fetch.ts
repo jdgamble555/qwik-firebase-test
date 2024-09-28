@@ -1,12 +1,13 @@
-import { isBrowser, isServer } from "@builder.io/qwik/build";
+import { isBrowser } from "@builder.io/qwik/build";
 import { getFirebase } from "./use-firebase";
 
 
 export const getAbout = async () => {
 
-    const { auth } = getFirebase();
-
     if (isBrowser) {
+
+        const { auth } = getFirebase();
+
         if (!auth?.currentUser) {
             throw 'Not Logged in!';
         }
@@ -31,6 +32,6 @@ export const getAbout = async () => {
 
         return about.data as AboutDoc;
     }
-    
+
     return null;
 };
