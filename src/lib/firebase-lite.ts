@@ -16,6 +16,8 @@ export const firebaseServer = async (request: Request) => {
 
     const firebaseApp = await importFirebaseApp();
 
+    console.log(authIdToken);
+
     const serverApp = firebaseApp.initializeServerApp(firebase_config, {
         authIdToken
     });
