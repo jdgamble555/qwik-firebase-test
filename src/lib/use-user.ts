@@ -36,46 +36,47 @@ export function _useUser() {
 
     useVisibleTask$(() => {
 
-        getUser().then(({ auth, onAuthChange }) => {
+        if (isBrowser) {
 
-            // toggle loading
-            _store.loading = true;
+            getUser().then(({ auth, onAuthChange }) => {
 
-            if (!isBrowser) {
-                return;
-            }
+                // toggle loading
+                _store.loading = true;
 
-            // server environment
-            if (!auth) {
-                _store.loading = false;
-                _store.data = null;
-                return;
-            }
-
-            // subscribe to user changes
-            return onAuthChange(auth, (_user: User | null) => {
-
-                _store.loading = false;
-
-                if (!_user) {
+                // server environment
+                if (!auth) {
+                    _store.loading = false;
                     _store.data = null;
                     return;
                 }
 
-                // map data to user data type
-                const { photoURL, uid, displayName, email } = _user;
-                const data = { photoURL, uid, displayName, email };
+                // subscribe to user changes
+                return onAuthChange(auth, (_user: User | null) => {
 
-                // print data in dev mode
-                if (import.meta.env.DEV) {
-                    console.log(data);
-                }
+                    _store.loading = false;
 
-                // set store
-                _store.data = data;
+                    if (!_user) {
+                        _store.data = null;
+                        return;
+                    }
+
+                    // map data to user data type
+                    const { photoURL, uid, displayName, email } = _user;
+                    const data = { photoURL, uid, displayName, email };
+
+                    // print data in dev mode
+                    if (import.meta.env.DEV) {
+                        console.log(data);
+                    }
+
+                    // set store
+                    _store.data = data;
+                });
+
             });
 
-        });
+        }
+
     });
 
     return _store;

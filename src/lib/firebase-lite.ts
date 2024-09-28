@@ -1,7 +1,3 @@
-import { initializeServerApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore/lite";
-
 // import your .env variable
 // PUBLIC_FIREBASE_CONFIG={YOUR FIREBASE CONFIG}
 // make sure the Firebase keys are in Quotes ""
@@ -9,18 +5,28 @@ const firebase_config = JSON.parse(
     import.meta.env.PUBLIC_FIREBASE_CONFIG
 );
 
+const importFirestoreLite = async () => await import('firebase/firestore/lite');
+const importFirebaseApp = async () => await import('firebase/app');
+const importFirebaseAuth = async () => await import('firebase/auth');
+
+
 export const firebaseServer = async (request: Request) => {
 
     const authIdToken = request.headers.get('Authorization')?.split('Bearer ')[1];
 
-    const serverApp = initializeServerApp(firebase_config, {
+    const firebaseApp = await importFirebaseApp();
+
+    const serverApp = firebaseApp.initializeServerApp(firebase_config, {
         authIdToken
     });
 
-    const serverAuth = getAuth(serverApp);
+    const firebaseAuth = await importFirebaseAuth();
+
+    const serverAuth = firebaseAuth.getAuth(serverApp);
     await serverAuth.authStateReady();
 
-    const serverDB = getFirestore(serverApp);
+    const firestoreLite = await importFirestoreLite();
+    const serverDB = firestoreLite.getFirestore(serverApp);
 
     return {
         serverAuth,
