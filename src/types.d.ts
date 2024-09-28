@@ -9,11 +9,16 @@ declare global {
         email: string | null;
     };
 
-
     type AboutDoc = {
         name: string;
         description: string;
     };
+
+    type FirebaseType = {
+        app: FirebaseApp | null;
+        db: Firestore | null;
+        auth: Auth | null;
+    }
 
     namespace App {
         // interface Error {}

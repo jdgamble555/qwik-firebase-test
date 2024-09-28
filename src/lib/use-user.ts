@@ -20,7 +20,7 @@ export interface userData {
 
 export const loginWithGoogle = async () => {
     if (isBrowser) {
-        const { auth } = getFirebase();
+        const { auth } = await getFirebase();
         if (!auth) {
             return;
         }
@@ -30,7 +30,7 @@ export const loginWithGoogle = async () => {
 
 export const logout = async () => {
     if (isBrowser) {
-        const { auth } = getFirebase();
+        const { auth } = await getFirebase();
         if (!auth) {
             return;
         }
@@ -50,45 +50,46 @@ export function _useUser() {
 
     useVisibleTask$(() => {
 
-        const { auth } = getFirebase();
+        getFirebase().then(({ auth }) => {
 
-        // toggle loading
-        _store.loading = true;
+            // toggle loading
+            _store.loading = true;
 
-        if (!isBrowser) {
-            return;
-        }
+            if (!isBrowser) {
+                return;
+            }
 
-        // server environment
-        if (!auth) {
-            _store.loading = false;
-            _store.data = null;
-            return;
-        }
-
-        // subscribe to user changes
-        return onIdTokenChanged(auth, (_user: User | null) => {
-
-            _store.loading = false;
-
-            if (!_user) {
+            // server environment
+            if (!auth) {
+                _store.loading = false;
                 _store.data = null;
                 return;
             }
 
-            // map data to user data type
-            const { photoURL, uid, displayName, email } = _user;
-            const data = { photoURL, uid, displayName, email };
+            // subscribe to user changes
+            return onIdTokenChanged(auth, (_user: User | null) => {
 
-            // print data in dev mode
-            if (import.meta.env.DEV) {
-                console.log(data);
-            }
+                _store.loading = false;
 
-            // set store
-            _store.data = data;
+                if (!_user) {
+                    _store.data = null;
+                    return;
+                }
+
+                // map data to user data type
+                const { photoURL, uid, displayName, email } = _user;
+                const data = { photoURL, uid, displayName, email };
+
+                // print data in dev mode
+                if (import.meta.env.DEV) {
+                    console.log(data);
+                }
+
+                // set store
+                _store.data = data;
+            });
+
         });
-
     });
 
     return _store;

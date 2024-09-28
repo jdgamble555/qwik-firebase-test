@@ -6,7 +6,7 @@ export const getAbout = async () => {
 
     if (isBrowser) {
 
-        const { auth } = getFirebase();
+        const { auth } = await getFirebase();
 
         if (!auth?.currentUser) {
             throw 'Not Logged in!';

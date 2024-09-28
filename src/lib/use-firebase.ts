@@ -1,7 +1,7 @@
 import { isBrowser } from '@builder.io/qwik/build';
-import { FirebaseApp, getApp, getApps, initializeApp } from 'firebase/app';
-import { Auth, getAuth } from 'firebase/auth';
-import { Firestore, getFirestore } from 'firebase/firestore';
+import { getApp, getApps, initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 // import your .env variable
 // PUBLIC_FIREBASE_CONFIG={YOUR FIREBASE CONFIG}
@@ -10,20 +10,23 @@ const firebase_config = JSON.parse(
     import.meta.env.PUBLIC_FIREBASE_CONFIG
 );
 
-type FirebaseType = {
-    app: FirebaseApp | null;
-    db: Firestore | null;
-    auth: Auth | null;
-}
+
+const importFirebase = async () => {
+
+    const firebaseApp = await import('firebase/app');
+
+    if (firebaseApp.getApps()?.length) {
+        return firebaseApp.getApp();
+    }
+    return firebaseApp.initializeApp(firebase_config);
+};
 
 
-export const getFirebase = () => {
+export const getFirebase = async () => {
 
     if (isBrowser) {
-        // initialize firebase
-        const app = getApps().length
-            ? getApp()
-            : initializeApp(firebase_config);
+
+        const app = await importFirebase();
 
         const db = getFirestore(app);
         const auth = getAuth(app);
