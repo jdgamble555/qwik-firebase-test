@@ -55,7 +55,6 @@ export const login = async () => {
 export const getUser = async () => {
     const firebaseAuth = await importFirebaseAuth();
     const { auth } = await getFirebase();
-
     return {
         auth,
         onAuthChange: firebaseAuth.onIdTokenChanged
